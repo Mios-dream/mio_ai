@@ -3,11 +3,10 @@ from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
     AutoModel,
-    AutoConfig,
     BitsAndBytesConfig,
 )
 from peft import PeftModel
-import fastapi
+import log
 
 
 def load_adapter(model, lora_path_list: list):
@@ -20,7 +19,7 @@ def load_adapter(model, lora_path_list: list):
 
     """
 
-    log_info("加载的适配器类型: LoRA")
+    log.log_info("加载的适配器类型: LoRA")
 
     for adapter in lora_path_list:
 
@@ -30,12 +29,12 @@ def load_adapter(model, lora_path_list: list):
 
     if len(lora_path_list) > 0:
 
-        print(f"混合了 {len(lora_path_list)} 个适配器.")
+        log.log_info(f"混合了 {len(lora_path_list)} 个适配器.")
 
     return model
 
 
-def load_model(model_path, device="cuda"):
+def load_model(model_path: str, device: str = "cuda"):
     """
 
     @due 加载llm模型
@@ -47,12 +46,10 @@ def load_model(model_path, device="cuda"):
 
     """
     torch_dtype = torch.float16  # 加载模型精度，默认float16 ,可选float32或混合精度
-    # qwen用这个加载
-    # model = AutoModelForCausalLM.from_pretrained(
-    #     model_path, torch_dtype=torch_dtype, trust_remote_code=True
-    # ).to(device)
+
     params = {"trust_remote_code": True, "low_cpu_mem_usage": True}
 
+    # 量化方法
     # quantization_config_params = {
     #     "load_in_4bit": True,
     #     "bnb_4bit_compute_dtype": torch.float16,
@@ -61,12 +58,20 @@ def load_model(model_path, device="cuda"):
     # }
     # params["quantization_config"] = BitsAndBytesConfig(**quantization_config_params)
 
-    model = AutoModel.from_pretrained(model_path, **params).to(device)
+    # qwen用这个加载
+    # model = AutoModelForCausalLM.from_pretrained(
+    #     model_path, torch_dtype=torch_dtype, trust_remote_code=True
+    # ).to(device)
+
+    # chatglm2用这个加载
+    model = AutoModel.from_pretrained(model_path, torch_dtype=torch_dtype, **params).to(
+        device
+    )
 
     return model
 
 
-def load_tokenizer(model_path):
+def load_tokenizer(model_path: str):
     """
     @due 加载模型的tokenizer
     @param
@@ -76,18 +81,13 @@ def load_tokenizer(model_path):
     return AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 
 
-def log_info(infer):
+def auto_load_model(model_path: str):
     """
-    @due 在控制台打印日志
+    @due 模型的快捷加载方法
     @param
-        infer:需要打印的内容
-    @return
+        model_path:需要加载的模型路径
+    @return model和tokenizer对象
     """
-    print(infer)  # 在控制台打印日志
-
-
-def auto_load_model(model_path):
-
     model = load_model(model_path)
     tokenizer = load_tokenizer(model_path)
     return model, tokenizer
