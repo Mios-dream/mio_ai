@@ -1,7 +1,7 @@
 import requests
 import json
 from io import BytesIO
-
+import pygame
 
 url = "http://127.0.0.1:9880/"
 
@@ -36,30 +36,43 @@ emotions = {
 # 要合成的语音的情绪
 emotion = "happy"
 
+# 初始化系统播发器
+pygame.mixer.init()
 
-data = {
-    "refer_wav_path": emotions[emotion]["audio"],
-    "prompt_text": emotions[emotion]["text"],
-    "prompt_language": "zh",
-    "text": "阁下,最喜欢你啦",
-    "text_language": "zh",
-    "top_k": 5,
-    "top_p": 1,
-    "temperature": 1,
-}
-data = json.dumps(data, ensure_ascii=False)
 
-print(data)
+def tts_text(text):
 
-response = requests.post(url, data=data.encode("utf-8"))
+    data = {
+        "refer_wav_path": emotions[emotion]["audio"],
+        "prompt_text": emotions[emotion]["text"],
+        "prompt_language": "zh",
+        "text": text,
+        "text_language": "zh",
+        "top_k": 5,
+        "top_p": 1,
+        "temperature": 1,
+    }
+    data = json.dumps(data, ensure_ascii=False)
 
-# 获取音频数据
-audio_data = response.content
+    print(data)
 
-# 将音频数据转换为wav文件
-audio_data_wav = BytesIO(audio_data)
+    response = requests.post(url, data=data.encode("utf-8"))
+
+    # 获取音频数据
+    audio_data = response.content
+
+    # 将音频数据转换为二进制
+    audio_data_wav = BytesIO(audio_data)
+
+    # 加载数据，播放声音
+    pygame.mixer.music.load(audio_data_wav)
+    pygame.mixer.music.play()
+
+    # 检测声音是否在播放
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
 
 
 # 保存wav文件
-with open("output.wav", "wb") as f:
-    f.write(audio_data_wav.getvalue())
+# with open("output.wav", "wb") as f:
+#     f.write(audio_data_wav.getvalue())
