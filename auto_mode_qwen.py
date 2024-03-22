@@ -1,3 +1,10 @@
+"""
+qwen模型的自动加载方法
+可以自动加载model和tokenizer
+也支持加载lora
+使用时需要根据具体情况进行修改。
+"""
+
 import torch
 from transformers import (
     AutoModelForCausalLM,
@@ -7,7 +14,7 @@ from transformers import (
 )
 from peft import PeftModel
 import fastapi
-import log
+import tool.log as log
 
 
 def load_adapter(model, lora_path_list: list[str]):
@@ -96,7 +103,7 @@ def auto_load_model(model_path: str):
 
 def main():
 
-    model, tokenizer = auto_load_model("./model/llama-7b-hf")
+    model, tokenizer = auto_load_model("./model/qwen")
 
     prompt = "你好"
     messages = [

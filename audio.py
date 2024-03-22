@@ -33,14 +33,20 @@ emotions = {
     },
 }
 
-# 要合成的语音的情绪
-emotion = "happy"
 
 # 初始化系统播发器
 pygame.mixer.init()
 
 
-def tts_text(text):
+def tts_text(text: str, emotion: str = "happy") -> None:
+    """
+    使用gptsovis接口将文字转换为音频，并播放
+    @param
+        text: 需要播报的文字
+        emotion: 情绪，默认为"happy"
+    @return: None
+
+    """
 
     data = {
         "refer_wav_path": emotions[emotion]["audio"],
@@ -54,7 +60,7 @@ def tts_text(text):
     }
     data = json.dumps(data, ensure_ascii=False)
 
-    print(data)
+    # print(data)
 
     response = requests.post(url, data=data.encode("utf-8"))
 

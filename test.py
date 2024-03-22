@@ -1,9 +1,14 @@
-import requests
-import json
-from io import BytesIO
-import pygame
-
+import fastgpt_chat_api
 import audio
 
 
-audio.tts_text("阁下晚上好")
+history = []
+while True:
+    user_input = input("阁下：")
+
+    response = fastgpt_chat_api.chat_fastapi(user_input, history=history)
+
+    history.append({"content": user_input, "role": "user"})
+
+    print("澪：", response)
+    audio.tts_text(response)
