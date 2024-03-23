@@ -1,4 +1,7 @@
 import requests
+from init_config import Config
+
+config = Config()
 
 
 # fastapi知识库接口调用-LLM回复
@@ -12,9 +15,9 @@ def chat_fastapi(content: str, history: list = [], uid=None, username=None) -> s
 
     """
 
-    url = "http://localhost:3020/api/v1/chat/completions"
+    url = config.fastgpt_url
 
-    apikey = "fastgpt-k4ms2P2ea6YrQ5usitpw8cuxEpNiPuiBYhF4WKVZmAUOF0uSQCZZ0J5mZD8Ng6rgQ"
+    apikey = config.fastgpt_key
 
     headers = {"Authorization": f"Bearer {apikey}", "Content-Type": "application/json"}
 
@@ -30,6 +33,7 @@ def chat_fastapi(content: str, history: list = [], uid=None, username=None) -> s
     #     "messages": [{"content": content, "role": "user"}],
     # }
 
+    # 简化请求
     data = {
         "stream": False,
         "detail": False,

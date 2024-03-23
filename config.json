@@ -1,0 +1,9 @@
+{
+    "fastgpt": {
+        "api_key": "fastgpt-k4ms2P2ea6YrQ5usitpw8cuxEpNiPuiBYhF4WKVZmAUOF0uSQCZZ0J5mZD8Ng6rgQ",
+        "url": "http://localhost:3020/api/v1/chat/completions"
+    },
+    "gptsovits": {
+        "url": "http://127.0.0.1:9880/"
+    }
+}

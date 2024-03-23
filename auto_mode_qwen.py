@@ -15,6 +15,10 @@ from transformers import (
 from peft import PeftModel
 import fastapi
 import tool.log as log
+from typing import TYPE_CHECKING, Tuple
+
+if TYPE_CHECKING:
+    from transformers import PreTrainedModel, PreTrainedTokenizer
 
 
 def load_adapter(model, lora_path_list: list[str]):
@@ -42,7 +46,7 @@ def load_adapter(model, lora_path_list: list[str]):
     return model
 
 
-def load_model(model_path: str, device: str = "cuda"):
+def load_model(model_path: str, device: str = "cuda") -> "PreTrainedModel":
     """
 
     @due 加载llm模型
@@ -78,7 +82,7 @@ def load_model(model_path: str, device: str = "cuda"):
     return model
 
 
-def load_tokenizer(model_path: str):
+def load_tokenizer(model_path: str) -> "PreTrainedTokenizer":
     """
     @due 加载模型的tokenizer
     @param
@@ -88,7 +92,7 @@ def load_tokenizer(model_path: str):
     return AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 
 
-def auto_load_model(model_path: str):
+def auto_load_model(model_path: str) -> Tuple["PreTrainedModel", "PreTrainedTokenizer"]:
     """
     @due 模型的快捷加载方法
     @param

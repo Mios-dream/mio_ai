@@ -2,8 +2,10 @@ import requests
 import json
 from io import BytesIO
 import pygame
+from init_config import Config
 
-url = "http://127.0.0.1:9880/"
+config = Config()
+url = config.gptsovits_url
 
 # 定义一个字典记录不同情绪的参考音频和文字
 emotions = {
@@ -33,6 +35,12 @@ emotions = {
     },
 }
 
+# emotions = {
+#     "happy": {
+#         "audio": "D:/GPT-SoVITS/models/mio/596732.ogg",
+#         "text": "老师，欢迎您，你比我预测的早到了43秒。",
+#     }
+# }
 
 # 初始化系统播发器
 pygame.mixer.init()
