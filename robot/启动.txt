@@ -1,0 +1,2 @@
+adb connect 127.0.0.1:XXXXX
+adb forward tcp:5800 tcp:5800

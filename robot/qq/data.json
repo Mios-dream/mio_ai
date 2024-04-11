@@ -1,0 +1,29 @@
+{
+    "time": 1712818130,
+    "self_id": 2814721302,
+    "post_type": "message",
+    "message_type": "group",
+    "sub_type": "normal",
+    "message_id": 1846272260,
+    "group_id": 676832751,
+    "peer_id": 2814721302,
+    "user_id": 2814721302,
+    "message": [
+        {
+            "data": {
+                "text": "好难写"
+            },
+            "type": "text"
+        }
+    ],
+    "raw_message": "好难写",
+    "font": 0,
+    "sender": {
+        "user_id": 2814721302,
+        "nickname": "三三老婆",
+        "card": "三三老婆",
+        "role": "admin",
+        "title": "",
+        "level": ""
+    }
+}

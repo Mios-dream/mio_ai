@@ -1,9 +1,8 @@
 import fastgpt_chat_api
-import audio
+import tool.audio as audio
 from recognize_whisper import ASR
 import os
 import time
-import asyncio
 import threading
 import pygame
 

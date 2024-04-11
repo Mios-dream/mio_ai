@@ -22,7 +22,7 @@ class ASR:
         return result["text"]
 
     def recognize_whisper_from_microphnoe(self):
-
+        # 自动调用麦克风进行语音识别
         r = sr.Recognizer()
 
         cc = opencc.OpenCC("t2s")
@@ -47,7 +47,7 @@ class ASR:
         return data
 
     def recognize_whisper_from_file(self, file_path):
-        # 调用Whisper进行语音识别
+        # 调用Whisper进行对文件进行语音识别
 
         model = whisper.load_model("base", device="cuda")
 
