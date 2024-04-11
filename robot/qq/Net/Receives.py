@@ -14,6 +14,9 @@ class OneBotReceive:
 
         self.config = config
 
+    async def SendMessage(self, msg):
+        await self.Websocket.send(msg)
+
     async def Start(self):
         self.Websocket = await websockets.connect(self.config.Websocket)
         Log.info("websockets连接成功")
