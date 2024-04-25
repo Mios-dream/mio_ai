@@ -1,10 +1,16 @@
-import fastgpt_chat_api
-import tool.audio as audio
-from recognize_whisper import ASR
+import Models.fastgpt_chat_api as fastgpt_chat_api
+import Tools.audio as audio
+from Models.recognize_whisper import ASR
 import os
 import time
 import threading
 import pygame
+
+"""
+直接启动即可
+实时语音聊天
+
+"""
 
 
 class stream(threading.Thread):

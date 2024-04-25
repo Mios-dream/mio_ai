@@ -1,16 +1,18 @@
 from bilibili_api import Credential, Danmaku, sync
 from bilibili_api.live import LiveDanmaku, LiveRoom
-import fastgpt_chat_api
-import tool.audio as audio
-
+import Models.fastgpt_chat_api as fastgpt_chat_api
+import Tools.audio as audio
 import os
 import time
 import threading
-
 import queue
 
 
 class stream(threading.Thread):
+    """
+    创建一个线程，用于流式输出文本
+    """
+
     # 模拟控制台流式输出
     def __init__(self, response, retaining):
         threading.Thread.__init__(self)
@@ -38,6 +40,10 @@ class stream(threading.Thread):
 
 
 class tts(threading.Thread):
+    """
+    创建一个线程，用于将文本转换为语音并播放
+    """
+
     def __init__(self, response):
         threading.Thread.__init__(self)
         self.response = response
@@ -49,15 +55,8 @@ class tts(threading.Thread):
             pass
 
 
-history = []
-
-msg_queue = queue.Queue()
-
-
-os.system("cls")
-
-
-print("加载完成")
+def msg_thread(msg):
+    msg_queue.put(msg)
 
 
 def msg_reply():
@@ -89,13 +88,14 @@ def msg_reply():
         thread2.join()
 
 
-# 创建新线程
-thread_msg = threading.Thread(target=msg_reply)
-thread_msg.start()
+history = []
+# 消息队列
+msg_queue = queue.Queue()
 
 
-def msg_thread(msg):
-    msg_queue.put(msg)
+os.system("cls")
+
+print("加载完成")
 
 
 # 自己直播间号

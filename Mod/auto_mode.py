@@ -1,5 +1,5 @@
 """
-qwen模型的自动加载方法
+chatglm2模型的自动加载方法
 可以自动加载model和tokenizer
 也支持加载lora
 使用时需要根据具体情况进行修改。
@@ -13,15 +13,10 @@ from transformers import (
     BitsAndBytesConfig,
 )
 from peft import PeftModel
-import fastapi
-import tool.log as log
-from typing import TYPE_CHECKING, Tuple
-
-if TYPE_CHECKING:
-    from transformers import PreTrainedModel, PreTrainedTokenizer
+from Tools.log import Log
 
 
-def load_adapter(model, lora_path_list: list[str]):
+def load_adapter(model, lora_path_list: list):
     """
     @due 这个方法用于给模型添加Lora，支持多个lora加载
     @param
@@ -31,7 +26,7 @@ def load_adapter(model, lora_path_list: list[str]):
 
     """
 
-    log.log_info("加载的适配器类型: LoRA")
+    Log.info("加载的适配器类型: LoRA")
 
     for adapter in lora_path_list:
 
@@ -41,25 +36,24 @@ def load_adapter(model, lora_path_list: list[str]):
 
     if len(lora_path_list) > 0:
 
-        log.log_info(f"混合了 {len(lora_path_list)} 个适配器.")
+        Log.info(f"混合了 {len(lora_path_list)} 个适配器.")
 
     return model
 
 
-def load_model(model_path: str, device: str = "cuda") -> "PreTrainedModel":
+def load_model(model_path: str, device: str = "cuda"):
     """
 
     @due 加载llm模型
     @param
         model_name:加载模型的路径
         device:将模型加载到的设备，默认为cuda
-    @return 模型对象
+    @return
 
 
     """
     torch_dtype = torch.float16  # 加载模型精度，默认float16 ,可选float32或混合精度
 
-    # 加载参数
     params = {"trust_remote_code": True, "low_cpu_mem_usage": True}
 
     # 量化方法
@@ -72,17 +66,19 @@ def load_model(model_path: str, device: str = "cuda") -> "PreTrainedModel":
     # params["quantization_config"] = BitsAndBytesConfig(**quantization_config_params)
 
     # qwen用这个加载
-    model = AutoModelForCausalLM.from_pretrained(
-        model_path, torch_dtype=torch_dtype, trust_remote_code=True
-    ).to(device)
+    # model = AutoModelForCausalLM.from_pretrained(
+    #     model_path, torch_dtype=torch_dtype, trust_remote_code=True
+    # ).to(device)
 
     # chatglm2用这个加载
-    # model = AutoModel.from_pretrained(model_path,torch_dtype=torch_dtype, **params).to(device)
+    model = AutoModel.from_pretrained(model_path, torch_dtype=torch_dtype, **params).to(
+        device
+    )
 
     return model
 
 
-def load_tokenizer(model_path: str) -> "PreTrainedTokenizer":
+def load_tokenizer(model_path: str):
     """
     @due 加载模型的tokenizer
     @param
@@ -92,14 +88,13 @@ def load_tokenizer(model_path: str) -> "PreTrainedTokenizer":
     return AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 
 
-def auto_load_model(model_path: str) -> Tuple["PreTrainedModel", "PreTrainedTokenizer"]:
+def auto_load_model(model_path: str):
     """
     @due 模型的快捷加载方法
     @param
         model_path:需要加载的模型路径
     @return model和tokenizer对象
     """
-
     model = load_model(model_path)
     tokenizer = load_tokenizer(model_path)
     return model, tokenizer
@@ -107,7 +102,7 @@ def auto_load_model(model_path: str) -> Tuple["PreTrainedModel", "PreTrainedToke
 
 def main():
 
-    model, tokenizer = auto_load_model("./model/qwen")
+    model, tokenizer = auto_load_model("./model/llama-7b-hf")
 
     prompt = "你好"
     messages = [
@@ -128,7 +123,6 @@ def main():
 
     # 模型的回复
     response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
-
     print(response)
 
     torch.cuda.empty_cache()  # 在不再需要模型数据时清理缓存

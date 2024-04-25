@@ -333,7 +333,7 @@ async def get_embeddings(request: EmbeddingRequest):
 
 if __name__ == "__main__":
 
-    model_path = "/root/autodl-tmp/LLaMA-Factory/mode/qwen/Qwen1___5-7B-Chat"
+    model_path = "D:/yutuber_ai/mio_ai/models/qwen/Qwen1___5-4B-Chat"
     # model_path = "/root/autodl-tmp/LLaMA-Factory/mode/ZhipuAI/chatglm2-6b"
 
     embeddings_model_path = "/root/autodl-tmp/LLaMA-Factory/mode/xrunda/m3e-base"
@@ -345,14 +345,16 @@ if __name__ == "__main__":
 
     # 是否给模型添加lora
     is_loder_lora = False
-
+    # 是否加载m3e模型
+    is_loder_m3e = False
     if is_loder_lora:
         # lora路径
         adapter_path = []
         for adapter in adapter_path:
             model = auto_mode_qwen.load_adapter(model, adapter)
 
-    embeddings_model = SentenceTransformer(embeddings_model_path, device="cuda")
+    if is_loder_m3e:
+        embeddings_model = SentenceTransformer(embeddings_model_path, device="cuda")
 
     model.eval()
 

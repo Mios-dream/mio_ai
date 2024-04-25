@@ -15,10 +15,3 @@ class Log:
     @staticmethod
     def error(msg):
         print("错误:", msg)
-
-    @staticmethod
-    def adapter(msg):
-        """
-        输出收到的上报消息
-        """
-        print("上报消息:", msg)

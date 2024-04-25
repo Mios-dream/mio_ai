@@ -1,0 +1,1 @@
+D:\yutuber_ai\env\python.exe live_chat.py
